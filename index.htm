@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My English Wordbook</title>
+    <style>
+        /* 全体のデザイン設定 */
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        /* 単語帳リスト全体の枠組み */
+        .word-list {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* 単語カードのデザイン */
+        .word-card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* 英単語の文字 */
+        .english {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        /* 日本語の意味（最初は隠すボタン、クリックで表示） */
+        .japanese {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+
+        /* 答えが表示されたときのスタイル */
+        .japanese.revealed {
+            background-color: transparent;
+            color: #2c3e50;
+            cursor: default;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>My English Wordbook 📖</h1>
+
+    <!-- ここに単語を追加していきます -->
+    <div class="word-list">
+
+        <!-- 単語カード1 -->
+        <div class="word-card">
+            <span class="english">repository</span>
+            <button class="japanese" onclick="reveal(this)">意味を見る</button>
+            <span class="meaning" style="display:none;">保管場所、貯蔵庫</span>
+        </div>
+
+        <!-- 単語カード2 -->
+        <div class="word-card">
+            <span class="english">awesome</span>
+            <button class="japanese" onclick="reveal(this)">意味を見る</button>
+            <span class="meaning" style="display:none;">最高な、素晴らしい</span>
+        </div>
+
+        <!-- 単語カード3 -->
+        <div class="word-card">
+            <span class="english">challenge</span>
+            <button class="japanese" onclick="reveal(this)">意味を見る</button>
+            <span class="meaning" style="display:none;">挑戦、課題</span>
+        </div>
+
+    </div>
+
+    <script>
+        /* 「意味を見る」ボタンを押した時の動き */
+        function reveal(button) {
+            // ボタンの隣にある隠された意味（spanタグ）を取得
+            const meaning = button.nextElementSibling;
+            
+            // ボタンのテキストを隠されていた意味に書き換える
+            button.textContent = meaning.textContent;
+            
+            // ボタンのデザインを「文字だけ」に変更する
+            button.classList.add('revealed');
+            
+            // 何度も押せないようにボタン機能を無効化
+            button.disabled = true;
+        }
+    </script>
+
+</body>
+</html>
