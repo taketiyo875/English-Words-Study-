@@ -1,14 +1,15 @@
+
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My English Wordbook</title>
+    <title>英検3級 英単語4択クイズ</title>
     <style>
-        /* 全体のデザイン設定 */
         body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f4f7f6;
+            background-color: #f0f4f8;
             color: #333;
             margin: 0;
             padding: 20px;
@@ -19,103 +20,196 @@
 
         h1 {
             color: #2c3e50;
-            margin-bottom: 30px;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
-        /* 単語帳リスト全体の枠組み */
-        .word-list {
+        .quiz-container {
+            background-color: #fff;
             width: 100%;
-            max-width: 500px;
+            max-width: 450px;
+            padding: 30px 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .question-number {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+
+        .japanese-word {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid #3498db;
+        }
+
+        .options-list {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
-        /* 単語カードのデザイン */
-        .word-card {
+        .option-btn {
             background-color: #fff;
-            padding: 20px;
+            color: #34495e;
+            border: 2px solid #bdc3c7;
+            padding: 12px;
             border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* 英単語の文字 */
-        .english {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: bold;
-            color: #3498db;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
-        /* 日本語の意味（最初は隠すボタン、クリックで表示） */
-        .japanese {
-            background-color: #e74c3c;
+        .option-btn:hover {
+            background-color: #f8f9fa;
+            border-color: #3498db;
+        }
+
+        .result-message {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-top: 15px;
+            min-height: 30px;
+        }
+        .correct { color: #2ecc71; }
+        .wrong { color: #e74c3c; }
+
+        .next-btn {
+            background-color: #3498db;
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background 0.3s;
-        }
-
-        /* 答えが表示されたときのスタイル */
-        .japanese.revealed {
-            background-color: transparent;
-            color: #2c3e50;
-            cursor: default;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
             font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 4px 6px rgba(52,152,219,0.2);
+        }
+        .next-btn:hover {
+            background-color: #2980b9;
         }
     </style>
 </head>
 <body>
 
-    <h1>My English Wordbook 📖</h1>
+    <h1>英検3級 単語テスト ✏️</h1>
 
-    <!-- ここに単語を追加していきます -->
-    <div class="word-list">
+    <div class="quiz-container">
+        <div class="question-number" id="q-num">第 1 問</div>
+        <div class="japanese-word" id="q-japanese">日本語の意味</div>
+        
+        <div class="options-list" id="options"></div>
 
-        <!-- 単語カード1 -->
-        <div class="word-card">
-            <span class="english">repository</span>
-            <button class="japanese" onclick="reveal(this)">意味を見る</button>
-            <span class="meaning" style="display:none;">保管場所、貯蔵庫</span>
-        </div>
-
-        <!-- 単語カード2 -->
-        <div class="word-card">
-            <span class="english">awesome</span>
-            <button class="japanese" onclick="reveal(this)">意味を見る</button>
-            <span class="meaning" style="display:none;">最高な、素晴らしい</span>
-        </div>
-
-        <!-- 単語カード3 -->
-        <div class="word-card">
-            <span class="english">challenge</span>
-            <button class="japanese" onclick="reveal(this)">意味を見る</button>
-            <span class="meaning" style="display:none;">挑戦、課題</span>
-        </div>
-
+        <div class="result-message" id="result"></div>
+        <button class="next-btn" id="next-trigger" style="display: none;" onclick="nextQuestion()">次の問題へ</button>
     </div>
 
     <script>
-        /* 「意味を見る」ボタンを押した時の動き */
-        function reveal(button) {
-            // ボタンの隣にある隠された意味（spanタグ）を取得
-            const meaning = button.nextElementSibling;
-            
-            // ボタンのテキストを隠されていた意味に書き換える
-            button.textContent = meaning.textContent;
-            
-            // ボタンのデザインを「文字だけ」に変更する
-            button.classList.add('revealed');
-            
-            // 何度も押せないようにボタン機能を無効化
-            button.disabled = true;
-        }
-    </script>
+        const quizData = [
+            {
+                japanese: "～に同意する",
+                options: ["agree", "discover", "improve", "receive"],
+                answer: 0
+            },
+            {
+                japanese: "注意深い、気をつけている",
+                options: ["boring", "careful", "foreign", "popular"],
+                answer: 1
+            },
+            {
+                japanese: "世紀、100年間",
+                options: ["clerk", "custom", "government", "century"],
+                answer: 3
+            },
+            {
+                japanese: "～を覚えている",
+                options: ["remember", "forget", "explain", "collect"],
+                answer: 0
+            },
+            {
+                japanese: "環境",
+                options: ["volunteer", "environment", "passenger", "interview"],
+                answer: 1
+            }
+        ];
 
+        let currentIdx = 0;
+
+        function loadQuiz() {
+            const currentQuiz = quizData[currentIdx];
+            
+            document.getElementById("q-num").textContent = `第 ${currentIdx + 1} 問 / 全 ${quizData.length} 問`;
+            document.getElementById("q-japanese").textContent = currentQuiz.japanese;
+            
+            document.getElementById("result").textContent = "";
+            document.getElementById("next-trigger").style.display = "none";
+            
+            const optionsContainer = document.getElementById("options");
+            optionsContainer.innerHTML = "";
+            
+            currentQuiz.options.forEach((option, index) => {
+                const button = document.createElement("button");
+                button.className = "option-btn";
+                button.textContent = option;
+                button.onclick = () => checkAnswer(index, button);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function checkAnswer(selectedIndex, clickedButton) {
+            const currentQuiz = quizData[currentIdx];
+            const resultElement = document.getElementById("result");
+            const allButtons = document.querySelectorAll(".option-btn");
+            
+            allButtons.forEach(btn => btn.disabled = true);
+            
+            if (selectedIndex === currentQuiz.answer) {
+                resultElement.textContent = "⭕ 正解！";
+                resultElement.className = "result-message correct";
+                clickedButton.style.backgroundColor = "#2ecc71";
+                clickedButton.style.color = "white";
+                clickedButton.style.borderColor = "#2ecc71";
+            } else {
+                resultElement.textContent = `❌ 不正解... （正解は: ${currentQuiz.options[currentQuiz.answer]}）`;
+                resultElement.className = "result-message wrong";
+                clickedButton.style.backgroundColor = "#e74c3c";
+                clickedButton.style.color = "white";
+                clickedButton.style.borderColor = "#e74c3c";
+            }
+            
+            document.getElementById("next-trigger").style.display = "inline-block";
+        }
+
+        function nextQuestion() {
+            currentIdx++;
+            if (currentIdx < quizData.length) {
+                loadQuiz();
+            } else {
+                document.getElementById("q-num").textContent = "終了！";
+                document.getElementById("q-japanese").textContent = "お疲れ様でした！";
+                document.getElementById("options").innerHTML = "";
+                document.getElementById("result").textContent = "全問解き終わりました。";
+                document.getElementById("result").className = "result-message";
+                document.getElementById("next-trigger").style.display = "none";
+            }
+        }
+
+        loadQuiz();
+    </script>
 </body>
 </html>
+
+
+
